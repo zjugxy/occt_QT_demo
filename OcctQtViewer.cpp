@@ -42,6 +42,8 @@
 #include <Message.hxx>
 #include <OpenGl_GraphicDriver.hxx>
 #include <OpenGl_FrameBuffer.hxx>
+#include<StdSelect_BRepOwner.hxx>
+
 
 namespace
 {
@@ -246,7 +248,7 @@ OcctQtViewer::OcctQtViewer (QWidget* theParent)
 
     // create AIS context
     myContext = new AIS_InteractiveContext (myViewer);
-
+    //一个context基本上只可以绑定一个viewer
     myViewCube = new AIS_ViewCube();
     myViewCube->SetViewAnimation (myViewAnimation);
     myViewCube->SetFixedAnimationLoop (false);
@@ -463,6 +465,14 @@ void OcctQtViewer::mousePressEvent (QMouseEvent* theEvent)
                               aFlags,
                               false))
     {
+        if(havetoselect>0&&(theEvent->buttons()==Qt::LeftButton)){
+            auto ret = myContext->MoveTo(theEvent->pos().x(), theEvent->pos().y(),myView,false);
+            auto retentity = myContext->SelectDetected(AIS_SelectionScheme_Add);
+            if((retentity==AIS_SOP_OneSelected||retentity==AIS_SOP_SeveralSelected)&&myContext->HasDetected()){
+                std::cout<<"success click on"<<std::endl;
+                havetoselect -=1;
+            }
+        }
         updateView();
     }
 }

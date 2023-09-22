@@ -34,4 +34,5 @@ public:
     void InitSelectMenu();
 
     void PortDebugInfo();
+    void TestSelction();
 };

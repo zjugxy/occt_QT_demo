@@ -29,6 +29,7 @@
 #include <AIS_InteractiveContext.hxx>
 #include <AIS_ViewController.hxx>
 #include <V3d_View.hxx>
+#include"GlobalVaries.h"
 
 class AIS_ViewCube;
 
@@ -104,6 +105,7 @@ private:
     Handle(AIS_InteractiveContext) myContext;
     Handle(AIS_ViewCube)           myViewCube;
     Handle(V3d_View)               myFocusView;
+
 
     QString myGlInfo;
     bool myIsCoreProfile;

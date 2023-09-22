@@ -7,9 +7,13 @@
 #include <TCollection_AsciiString.hxx>
 #include"OcctQtViewer.h"
 #include<QString>
+#include"GlobalVaries.h"
+
 class Appfunc:public Standard_Transient
 {
     DEFINE_STANDARD_RTTI_INLINE(Appfunc,Standard_Transient)
+
+
 public:
     Appfunc(OcctQtViewer* _temp):myviewer(_temp){
     }
@@ -22,6 +26,10 @@ public:
     void EdgeSelectMode();
     void FaceSelectMode();
     void NeutralSelectMode();
+
+    void SelecttoBuildPrim();
+    void SelectionDonePrim();
+
 
 private:
     NCollection_Vector<Handle(AIS_InteractiveObject)> myObject3d;

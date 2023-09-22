@@ -8,6 +8,11 @@
 #include<TopTools_HSequenceOfShape.hxx>
 #include<STEPControl_Reader.hxx>
 #include<IGESControl_Reader.hxx>
+#include<StdSelect_BRepOwner.hxx>
+#include<TopoDS.hxx>
+#include<TopoDS_Edge.hxx>
+#include<BRepFilletAPI_MakeFillet.hxx>
+
 void
 Appfunc::Addbottle()
 {
@@ -118,6 +123,7 @@ void Appfunc::EdgeSelectMode()
 {
     myviewer->Context()->Deactivate();
     myviewer->Context()->Activate(AIS_Shape::SelectionMode(TopAbs_EDGE));
+
 }
 
 void Appfunc::FaceSelectMode()
@@ -130,6 +136,53 @@ void Appfunc::NeutralSelectMode()
 {
     myviewer->Context()->Deactivate();
     myviewer->Context()->Activate(0);
+}
+//debug demo
+void Appfunc::SelecttoBuildPrim()
+{
+    EdgeSelectMode();
+    havetoselect = 1;
+}
+
+void Appfunc::SelectionDonePrim()
+{
+    if(havetoselect!=0)
+        return;
+
+    auto myAISCtx = myviewer->Context();
+
+
+
+    for (myAISCtx->InitSelected(); myAISCtx->MoreSelected(); myAISCtx->NextSelected())
+    {
+        std::cout<<"donecount"<<std::endl;
+        Handle(SelectMgr_EntityOwner) anOwner = myAISCtx->SelectedOwner();
+        Handle(AIS_InteractiveObject) anObj = Handle(AIS_InteractiveObject)::DownCast (anOwner->Selectable());
+        if (Handle(StdSelect_BRepOwner) aBRepOwner = Handle(StdSelect_BRepOwner)::DownCast (anOwner))
+        {
+            // to be able to use the picked shape
+            TopoDS_Shape aShape = aBRepOwner->Shape();
+            if(aShape.ShapeType()==TopAbs_EDGE){
+                std::cout<<"is_edge"<<std::endl;
+                TopoDS_Edge aedge = TopoDS::Edge(aShape);
+                Handle(AIS_Shape) obj =  Handle(AIS_Shape)::DownCast(anOwner->Selectable());
+                auto baseshape = obj->Shape();
+                myAISCtx->Remove(obj,false);
+                BRepFilletAPI_MakeFillet MF(baseshape);
+                MF.Add(10,aedge);
+                TopoDS_Shape newshape = MF.Shape();
+                Handle(AIS_Shape) aisShape = new AIS_Shape(newshape);
+                myObject3d.Clear();
+                myObject3d.Append(aisShape);
+                    myAISCtx->ClearSelected(false);
+                myviewer->Context()->Display(aisShape, AIS_Shaded, 0, Standard_False);
+                myviewer->AXO_FitAll();
+                std::cout<<"workthrough"<<std::endl;
+                break;
+            }
+        }
+    }
+
 }
 
 

@@ -180,6 +180,22 @@ void MyMainWindow::InitDebugMenu()
             PortDebugInfo();
         });
     }
+    {
+        QAction* anActionSelectionDebug = new QAction(aMenuDebug);
+        anActionSelectionDebug->setText("Selection Debug");
+        aMenuDebug->addAction(anActionSelectionDebug);
+        connect(anActionSelectionDebug,&QAction::triggered,[this](){
+            myappfunc->SelecttoBuildPrim();
+        });
+    }
+    {
+        QAction* anActionPrimDebug = new QAction(aMenuDebug);
+        anActionPrimDebug->setText("Prim Debug");
+        aMenuDebug->addAction(anActionPrimDebug);
+        connect(anActionPrimDebug,&QAction::triggered,[this](){
+            myappfunc->SelectionDonePrim();
+        });
+    }
 }
 
 void MyMainWindow::InitSelectMenu()
@@ -227,6 +243,11 @@ void MyMainWindow::PortDebugInfo()
     qDebug()<<"occt wid,height"<<mywid<<" "<<myhei;
     QSize tempsize = myViewer->size();
     qDebug()<<"qt   wid,height"<<tempsize.width()<<" "<<tempsize.height();
+}
+
+void MyMainWindow::TestSelction()
+{
+    return;
 }
 
 

@@ -35,6 +35,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         OcctQtViewer.h OcctQtViewer.cpp
         Appfunc.h Appfunc.cpp
         MakeBottle.h MakeBottle.cpp
+        GlobalVaries.h
+        GlobalVaries.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET mydemo APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
